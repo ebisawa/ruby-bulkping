@@ -1,0 +1,90 @@
+* BulkPing
+
+  複数のホスト宛の ping をまとめて扱える Ruby エクステンションです。
+
+* インストール
+
+   RubyGems を使います。
+   
+   # gem build bulkping-gemspec
+   # gem install bulkping-0.1.1.gem
+
+* リファレンス
+
+  BulkPing::ICMP.new
+    BulkPing::ICMP オブジェクトを生成します。
+
+  BulkPing::ICMP#ping(targets)
+    指定された targets に向けて ICMP echo リクエストを送信します。
+
+    targets には対象 IP アドレスの配列を渡します。
+    IP アドレスの記述方法には以下の 3 つがあります。
+
+　　- IP アドレス
+　    例: '192.168.0.1'
+　　- IP アドレス範囲
+　    例: '192.168.0.1-192.168.0.100'
+　　- ネットワーク
+　    例: '192.168.0.0/24'　　
+
+  BulkPing::ICMP#ping(targets) {|host, result| ... }
+    ping を送信した各アドレスについて、アドレスと結果をブロックに適用します。
+
+  BulkPing::ICMP#alive?(target)
+    ping の結果、target から応答があったか否かを返します。
+
+  BulkPing::ICMP#alive
+    ping の結果、応答があったアドレスの配列を返します。
+
+  BulkPing::ICMP#dead
+    ping の結果、応答がなかったアドレスの配列を返します。
+
+* サンプル
+
+  require 'rubygems'
+  require 'bulkping'
+
+  bp = BulkPing::ICMP.new
+  bp.ping('192.168.0.1', '192.168.0.2', '192.168.0.3', '192.168.0.4')
+
+  if bp.alive?('192.168.0.1')
+    puts "192.168.0.1 is alive"
+  else
+    puts "192.168.0.1 is dead"
+  end
+
+  puts "-- alive --"
+  puts bp.alive
+  puts "-- dead --"
+  puts bp.dead
+
+  bp.ping(['192.168.0.1', [ '192.168.0.2', [ '192.168.0.3' ] ], '192.168.0.4'])
+  puts "-- alive --"
+  puts bp.alive
+
+  bp.ping('192.168.0.1', '192.168.0.2', '192.168.0.3', '192.168.0.4') do |addr, result|
+    puts "addr=#{addr}, result=#{result}"
+  end
+
+* 実行例
+
+  192.168.0.1 is alive
+  -- alive --
+  192.168.0.1
+  -- dead --
+  192.168.0.2
+  192.168.0.3
+  192.168.0.4
+  -- alive --
+  192.168.0.1
+  addr=192.168.0.1, result=true
+  addr=192.168.0.2, result=false
+  addr=192.168.0.3, result=false
+  addr=192.168.0.4, result=false
+
+* ライセンス
+
+  Copyright (c) 2010 Satoshi Ebisawa <ebisawa@gmail.com>
+  All rights reserved.
+
+  詳しくは付属の LICENSE ファイルを参照してください。
