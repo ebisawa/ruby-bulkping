@@ -4,7 +4,7 @@ Gem::Specification.new do |spec|
   spec.platform = Gem::Platform::RUBY
   spec.summary = "Bulk ping sender for Ruby"
   spec.files = Dir.glob('**/*')
-  spec.extensions << "ext"
+  spec.extensions << "ext/bulkping/extconf.rb"
 
   spec.author = "Satoshi Ebisawa"
   spec.email = "ebisawa@gmail.com"
