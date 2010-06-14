@@ -227,21 +227,3 @@ sa2v(struct sockaddr *sa)
 
     return string;
 }
-
-
-
-
-
-
-#if 0
-
-bp = BulkPing::ICMP.new
-bp.send('127.0.0.1', '192.168.0.0/24') do |addr, result|
-
-end
-r = bp.send('127.0.0.1', '192.168.0.0/24')
-
-bp.alive?('127.0.0.1')
-end
-
-#endif
