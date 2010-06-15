@@ -103,8 +103,8 @@ bulkping_is_alive(VALUE self, VALUE args)
 
     Data_Get_Struct(self, bulkping_t, bp);
 
-    for (i = 0; i < RARRAY_LEN(args); i++) {
-        v = RARRAY_PTR(args)[i];
+    for (i = 0; i < RARRAY(args)->len; i++) {
+        v = RARRAY(args)->ptr[i];
         if (TYPE(v) == T_STRING) {
             p = StringValuePtr(v);
             if ((target = pinger_tset_find(&bp->bp_tset, p)) == NULL)
@@ -167,8 +167,8 @@ bulkping_add_targets(pinger_tset_t *tset, VALUE args)
     char *p;
     VALUE v;
 
-    for (i = 0; i < RARRAY_LEN(args); i++) {
-        v = RARRAY_PTR(args)[i];
+    for (i = 0; i < RARRAY(args)->len; i++) {
+        v = RARRAY(args)->ptr[i];
         switch (TYPE(v)) {
         case T_STRING:
             p = StringValuePtr(v);

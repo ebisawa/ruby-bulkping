@@ -96,10 +96,11 @@ pinger_tset_find(pinger_tset_t *tset, char *addr)
 int
 pinger_open(pinger_t *pinger, pinger_vtable_t *vt)
 {
-    pinger->p_vt = vt;
-
     if ((pinger->p_sock = vt->v_open()) < 0)
         return -1;
+
+    pinger->p_vt = vt;
+    srandom(getpid() + random());
 
     return 0;
 }
@@ -209,11 +210,7 @@ pinger_send(pinger_t *pinger, pinger_tset_t *tset, int limit)
     for (i = 0, count = 0; i < tset->s_tcount && count < limit; i++) {
         target = &tset->s_targets[i];
         if (!target->t_sent) {
-#ifdef TEST
-            target->t_id = rand();
-#else
-            target->t_id = rb_genrand_int32();
-#endif
+            target->t_id = random();
             if ((len = pinger->p_vt->v_bufinit(buf, sizeof(buf), ++target->t_seq, target->t_id)) < 0)
                 return -1;
 
